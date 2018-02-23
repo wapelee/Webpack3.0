@@ -505,11 +505,11 @@ npm install --production
 可以利用node的语法来读取type的值，然后根据type的值用if–else判断。
 if(process.env.type== "build"){
     var website={
-        publicPath:"http://192.168.0.104:1717/"
+        publicPath:"http://localhost:1717/"
     }
 }else{
     var website={
-        publicPath:"http://cdn.jspang.com/"
+        publicPath:"http://www.baidu.com/"
     }
 }
 
