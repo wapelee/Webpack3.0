@@ -238,7 +238,7 @@ module:{
 publicPath：是在webpack.config.js文件的output选项中，主要作用就是处理静态文件路径的。
 在处理前，我们在webpack.config.js 上方声明一个对象，叫website。
 var website ={
-    publicPath:"http://192.168.1.108:1717/"
+    publicPath:"http://localhost:1717/"
 }
 注意，这里的IP和端口，是你本机的ip或者是你devServer配置的IP和端口。
 
