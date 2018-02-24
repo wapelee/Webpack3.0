@@ -592,3 +592,67 @@ new webpack.BannerPlugin('李伟鹏版权所有')
 
 
 实战技巧：webpack优化黑技能
+多个第三方类库抽离
+第一步:我们先用npm 进行安装。
+第二步：在入口配置中引入vue和jquery
+entry:{
+    entry:'./src/entry.js',
+    jquery:'jquery',
+    vue:'vue'
+},
+第三步：修改CommonsChunkPlugin配置
+需要修改两个位置：
+
+第一个是在name属性里把原来的字符串改为数组，因为我们要引入多个模块，所以是数组；
+第二个是在filename属性中把我们输出的文件名改为匹配付[name],这项操作就是打包出来的名字跟随我们打包前的模块。
+
+new webpack.optimize.CommonsChunkPlugin({
+    //name对应入口文件中的名字，我们起的是jQuery
+    name:['jquery','vue'],
+    //把文件打包到哪里，是一个路径
+    filename:"assets/js/[name].js",
+    //最小打包的文件模块数，这里直接写2就好
+    minChunks:2
+}),
+在项目开发中，我们很使用很多第三方类库，那好的做法就是把第三方这些类库全部抽离处理，这样在项目维护和性能上都是不错的选择。
+
+实战技巧：静态资源集中输出
+工作中会有一些已经存在但在项目中没有引用的图片资源或者其他静态资源（比如设计图、开发文档），这些静态资源有可能是文档，也有可能是一些额外的图片。项目组长会要求你打包时保留这些静态资源，直接打包到制定文件夹。其实打包这些资源只需要用到copy-webpack-plugin。
+
+copy-webpack-plugin就是专门为我们作静态资源转移的插件，不过它不同上两节使用的插件，它是需要安装的。
+
+cnpm install --save-dev copy-webpack-plugin
+
+引入插件
+安装好后，需要在webpack.config.js文件的头部引入这个插件才可以使用。
+
+const copyWebpackPlugin= require("copy-webpack-plugin");
+
+配置插件
+new copyWebpackPlugin([{
+        from:__dirname+'/src/public',
+        to:'./public'
+    }])
+
+from:要打包的静态资源目录地址，这里的__dirname是指项目目录下，是node的一种语法，可以直接定位到本机的项目目录中。
+to:要打包到的文件夹路径，跟随output配置中的目录。所以不需要再自己加__dirname。
+
+配置好后，我们就可以使用webpack 进行打包了，你会发现图片按照我们的配置打包了过去。
+
+实战技巧：Json配置文件使用
+读出Json内容
+第一步：现在我们的index.html模板中加入一个层，并给层一个Id，为了是在javascript代码中可以方便引用。
+	
+<div id="json"></div>
+
+第二步：到src文件夹下，找到入口文件，我这里是entry.js文件。修改里边的代码，如下：
+var json =require('../package.json');
+$('#json').html(json.name);
+
+第三部：启用我们的npm run server 命令就可以在浏览器中看到结果了。
+
+说说热更新
+其实在webpack3中启用热加载相当的容易，只要加入HotModuleReplacementPlugin这个插件就可以了。
+new webpack.HotModuleReplacementPlugin()
+现在只要你启动 npm run server 后，修改index.html中的内容，浏览器可以自动给我们更新出最新的页面。
+但这里说的热加更新和我们平时写程序的热加载不是一回事，比如说我们Vue或者React中的热更新，并不是刷新整个页面，而是一个局部更新，而这里的更新是重新刷新了页面。

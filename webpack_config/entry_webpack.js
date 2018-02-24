@@ -1,11 +1,11 @@
 //声明entry变量
-const entry ={};  
+const entry = {};
 //声明路径属性
-entry.path={
-    jquery:'jquery',
-    vue:'vue',
-    entery:'./src/entery.js',
-    main:'./src/main.js',
+entry.path = {
+    entry: './src/entery.js',
+    main: './src/main.js',
+    jquery:'jQuery',
+    vue:'vue'
 }
 //进行模块化
-module.exports =entry;
+module.exports = entry;
